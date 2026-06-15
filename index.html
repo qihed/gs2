@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Колесо вопросов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #FF1493;
+      --mint: #86D2C5;
+      --violet: #AB68E2;
+      --blue: #81C4D9;
+      --ink: #26264A;
+      --paper: #FFFFFF;
+      --line: rgba(38, 38, 74, .16);
+      --shadow: 0 26px 70px rgba(38, 38, 74, .18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(134, 210, 197, .26), transparent 30%),
+        radial-gradient(circle at 90% 12%, rgba(255, 20, 147, .14), transparent 32%),
+        radial-gradient(circle at 82% 88%, rgba(171, 104, 226, .18), transparent 34%),
+        #f8f8ff;
+      color: var(--ink);
+      font-family: "Montserrat", Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 28px;
+    }
+
+    .app {
+      width: min(1420px, 100%);
+      min-height: calc(100vh - 56px);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 20px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 4px solid var(--ink);
+      border-radius: 38px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      padding: clamp(26px, 3vw, 46px);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 260px;
+      height: 260px;
+      background: rgba(255, 20, 147, .10);
+      right: -88px;
+      top: -92px;
+      border: 26px solid rgba(129, 196, 217, .25);
+    }
+
+    .hero::after {
+      width: 150px;
+      height: 150px;
+      background: rgba(134, 210, 197, .22);
+      left: -54px;
+      bottom: -70px;
+      border: 18px solid rgba(171, 104, 226, .20);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: max-content;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      color: white;
+      background: var(--pink);
+      font-size: 17px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .01em;
+      box-shadow: 0 12px 0 rgba(255, 20, 147, .16);
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(44px, 6.8vw, 98px);
+      line-height: .9;
+      letter-spacing: -0.055em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .description {
+      margin: 0;
+      max-width: 1010px;
+      font-size: clamp(17px, 1.65vw, 28px);
+      line-height: 1.24;
+      font-weight: 900;
+      color: rgba(38, 38, 74, .78);
+    }
+
+    .hero-badge {
+      width: clamp(118px, 14vw, 190px);
+      aspect-ratio: 1;
+      border-radius: 38px;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(135deg, var(--mint), var(--blue));
+      border: 4px solid var(--ink);
+      box-shadow: 14px 14px 0 rgba(38, 38, 74, .12);
+      transform: rotate(4deg);
+    }
+
+    .hero-badge span {
+      color: white;
+      font-size: clamp(54px, 8vw, 118px);
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 6px 0 rgba(38, 38, 74, .16);
+    }
+
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 14px;
+      background: rgba(255, 255, 255, .82);
+      border: 2px solid rgba(38, 38, 74, .12);
+      border-radius: 30px;
+      padding: 14px;
+      box-shadow: 0 18px 46px rgba(38, 38, 74, .10);
+      backdrop-filter: blur(10px);
+    }
+
+    .mode-btn {
+      border: 3px solid rgba(38, 38, 74, .12);
+      background: white;
+      color: var(--ink);
+      min-height: 78px;
+      border-radius: 24px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: clamp(13px, 1.1vw, 18px);
+      font-weight: 900;
+      line-height: 1.08;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease, color .16s ease;
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(38, 38, 74, .10);
+      border-color: rgba(38, 38, 74, .24);
+    }
+
+    .mode-btn.active {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+      box-shadow: inset 0 -6px 0 rgba(255, 255, 255, .10), 0 16px 28px rgba(38, 38, 74, .16);
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(420px, 1.02fr) minmax(360px, .88fr);
+      gap: 26px;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .wheel-card,
+    .side-card {
+      border: 4px solid var(--ink);
+      border-radius: 38px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .wheel-card {
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: clamp(22px, 2.4vw, 38px);
+      overflow: hidden;
+      min-height: 590px;
+    }
+
+    .wheel-card::before {
+      content: "";
+      position: absolute;
+      inset: 26px;
+      border: 2px dashed rgba(38, 38, 74, .12);
+      border-radius: 28px;
+      pointer-events: none;
+    }
+
+    .wheel-wrap {
+      position: relative;
+      width: min(70vh, 690px, 100%);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .pointer {
+      position: absolute;
+      z-index: 20;
+      top: -2px;
+      left: 50%;
+      width: 0;
+      height: 0;
+      transform: translateX(-50%);
+      border-left: 24px solid transparent;
+      border-right: 24px solid transparent;
+      border-top: 56px solid var(--pink);
+      filter: drop-shadow(0 8px 0 rgba(38, 38, 74, .15));
+    }
+
+    .pointer::after {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: -50px;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: white;
+      border: 4px solid var(--ink);
+    }
+
+    .wheel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: clamp(9px, 1vw, 14px) solid var(--ink);
+      background: conic-gradient(var(--mint), var(--blue), var(--violet), var(--pink), var(--mint));
+      overflow: hidden;
+      box-shadow:
+        inset 0 0 0 8px rgba(255,255,255,.66),
+        inset 0 0 0 18px rgba(38, 38, 74, .07),
+        0 30px 60px rgba(38, 38, 74, .18);
+      transition: transform 4.6s cubic-bezier(.13,.79,.14,1);
+      will-change: transform;
+    }
+
+    .wheel::before {
+      content: "";
+      position: absolute;
+      inset: 16.5%;
+      z-index: 2;
+      border-radius: 50%;
+      border: 4px solid rgba(38, 38, 74, .18);
+      background: rgba(255, 255, 255, .17);
+      pointer-events: none;
+    }
+
+    .wheel::after {
+      content: "";
+      position: absolute;
+      inset: 42%;
+      z-index: 5;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 8px solid white;
+      box-shadow: 0 12px 26px rgba(38, 38, 74, .22);
+      pointer-events: none;
+    }
+
+    .sector-label {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      top: 50%;
+      width: clamp(34px, 4.5vw, 56px);
+      height: clamp(34px, 4.5vw, 56px);
+      margin-left: calc(clamp(34px, 4.5vw, 56px) / -2);
+      margin-top: calc(clamp(34px, 4.5vw, 56px) / -2);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: clamp(20px, 3vw, 42px);
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 4px 0 rgba(38, 38, 74, .18);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .spin-button {
+      position: absolute;
+      z-index: 30;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(136px, 17vw, 198px);
+      height: clamp(136px, 17vw, 198px);
+      border-radius: 999px;
+      border: 5px solid var(--ink);
+      background: white;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: clamp(16px, 1.45vw, 24px);
+      font-weight: 900;
+      line-height: 1.04;
+      text-transform: uppercase;
+      letter-spacing: -.02em;
+      box-shadow: 0 18px 0 rgba(38, 38, 74, .18), 0 22px 36px rgba(38, 38, 74, .22);
+      transition: transform .14s ease, box-shadow .14s ease;
+      padding: 18px;
+    }
+
+    .spin-button:hover {
+      transform: translate(-50%, calc(-50% - 3px));
+      box-shadow: 0 21px 0 rgba(38, 38, 74, .18), 0 28px 40px rgba(38, 38, 74, .22);
+    }
+
+    .spin-button:active {
+      transform: translate(-50%, calc(-50% + 8px));
+      box-shadow: 0 8px 0 rgba(38, 38, 74, .18), 0 14px 28px rgba(38, 38, 74, .20);
+    }
+
+    .spin-button[disabled],
+    .mode-btn[disabled] {
+      cursor: wait;
+      opacity: .76;
+    }
+
+    .side-card {
+      padding: clamp(24px, 2.6vw, 42px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 590px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .side-card::before {
+      content: "?";
+      position: absolute;
+      right: -26px;
+      bottom: -86px;
+      font-size: clamp(240px, 25vw, 420px);
+      line-height: 1;
+      font-weight: 900;
+      color: rgba(171, 104, 226, .10);
+      transform: rotate(-8deg);
+    }
+
+    .side-top,
+    .side-bottom {
+      position: relative;
+      z-index: 2;
+    }
+
+    .mini-label {
+      display: inline-flex;
+      align-items: center;
+      width: max-content;
+      max-width: 100%;
+      min-height: 44px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--pink);
+      color: white;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: 0 10px 0 rgba(255, 20, 147, .16);
+    }
+
+    .side-title {
+      margin: 22px 0 0;
+      font-size: clamp(42px, 5vw, 78px);
+      line-height: .88;
+      letter-spacing: -.055em;
+      text-transform: uppercase;
+    }
+
+    .mode-name {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 20px;
+      padding: 14px 18px;
+      border-radius: 20px;
+      border: 3px solid var(--ink);
+      background: rgba(134, 210, 197, .18);
+      font-size: clamp(16px, 1.3vw, 22px);
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat {
+      min-height: 92px;
+      border-radius: 24px;
+      border: 3px solid rgba(38, 38, 74, .12);
+      background: white;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: 0 12px 26px rgba(38, 38, 74, .08);
+    }
+
+    .stat strong {
+      font-size: clamp(28px, 3vw, 48px);
+      line-height: .9;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .stat span {
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.05;
+      font-weight: 900;
+      color: rgba(38, 38, 74, .62);
+      text-transform: uppercase;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: rgba(38, 38, 74, .52);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .24s ease;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .result-shell {
+      width: min(980px, 100%);
+      min-height: min(680px, calc(100vh - 56px));
+      perspective: 1600px;
+      transform: translateY(18px) scale(.86);
+      transition: transform .34s cubic-bezier(.2,.9,.22,1);
+    }
+
+    .overlay.show .result-shell {
+      transform: translateY(0) scale(1);
+    }
+
+    .result-card {
+      position: relative;
+      width: 100%;
+      min-height: min(680px, calc(100vh - 56px));
+      transform-style: preserve-3d;
+      transition: transform .78s cubic-bezier(.2,.75,.18,1);
+    }
+
+    .overlay.flipped .result-card {
+      transform: rotateY(180deg);
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      overflow: hidden;
+      border: 4px solid var(--ink);
+      border-radius: 42px;
+      background: white;
+      box-shadow: 0 34px 100px rgba(0,0,0,.28);
+    }
+
+    .front-face {
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(134, 210, 197, .36), transparent 34%),
+        radial-gradient(circle at 78% 16%, rgba(255, 20, 147, .20), transparent 28%),
+        radial-gradient(circle at 82% 88%, rgba(171, 104, 226, .24), transparent 34%),
+        white;
+    }
+
+    .front-question {
+      display: grid;
+      place-items: center;
+      width: min(420px, 64vw);
+      aspect-ratio: 1;
+      border-radius: 48px;
+      border: 5px solid var(--ink);
+      background: white;
+      color: var(--pink);
+      font-size: clamp(180px, 28vw, 340px);
+      line-height: .8;
+      font-weight: 900;
+      box-shadow: 18px 18px 0 rgba(38, 38, 74, .12);
+      transform: rotate(-3deg);
+    }
+
+    .back-face {
+      transform: rotateY(180deg);
+      padding: clamp(28px, 4vw, 62px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .back-face::before {
+      content: "";
+      position: absolute;
+      inset: auto -90px -130px auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: rgba(134, 210, 197, .26);
+      border: 34px solid rgba(129, 196, 217, .24);
+      pointer-events: none;
+    }
+
+    .question-meta {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 11px 18px;
+      border-radius: 999px;
+      font-size: clamp(14px, 1.2vw, 18px);
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .pill-number {
+      color: white;
+      background: var(--pink);
+      box-shadow: 0 10px 0 rgba(255, 20, 147, .16);
+    }
+
+    .pill-topic {
+      color: white;
+      background: var(--ink);
+    }
+
+    .question-text {
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      max-height: 400px;
+      overflow: auto;
+      padding-right: 10px;
+      font-size: clamp(32px, 4.8vw, 66px);
+      line-height: 1.05;
+      letter-spacing: -.055em;
+      font-weight: 900;
+      color: var(--ink);
+      scrollbar-width: thin;
+    }
+
+    .result-actions {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .close-btn {
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+      color: var(--ink);
+      min-height: 56px;
+      padding: 0 26px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 900;
+      box-shadow: 0 10px 0 rgba(38, 38, 74, .12);
+    }
+
+    .close-btn.primary {
+      background: var(--ink);
+      color: white;
+    }
+
+    @media (max-width: 1100px) {
+      body { padding: 18px; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-badge { display: none; }
+      .modes { grid-template-columns: 1fr 1fr; }
+      .stage { grid-template-columns: 1fr; }
+      .side-card { min-height: 360px; }
+      .wheel-card { min-height: 560px; }
+      .wheel-wrap { width: min(560px, 100%); }
+    }
+
+    @media (max-width: 650px) {
+      body { padding: 10px; }
+      .app { min-height: calc(100vh - 20px); gap: 12px; }
+      .hero { border-width: 3px; border-radius: 28px; padding: 22px; }
+      .modes { grid-template-columns: 1fr; border-radius: 24px; }
+      .mode-btn { min-height: 62px; border-radius: 18px; }
+      .wheel-card, .side-card { border-width: 3px; border-radius: 28px; }
+      .wheel-card { min-height: 430px; }
+      .wheel-wrap { width: min(400px, 100%); }
+      .pointer {
+        border-left-width: 17px;
+        border-right-width: 17px;
+        border-top-width: 42px;
+      }
+      .spin-button { width: 124px; height: 124px; }
+      .stat-row { grid-template-columns: 1fr; }
+      .overlay { padding: 12px; }
+      .face { border-radius: 28px; border-width: 3px; }
+      .back-face { padding: 24px; }
+      .result-actions { justify-content: stretch; }
+      .close-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero" aria-label="Шапка интерактива">
+      <div class="hero-inner">
+        <div>
+          <h1>Колесо вопросов</h1>
+          <p class="description">Учимся реагировать на инфоповоды, изменения в медиасреде и на то, что действительно важно и интересно для аудитории.</p>
+        </div>
+        <div class="hero-badge" aria-hidden="true"><span>?</span></div>
+      </div>
+    </section>
+
+    <nav class="modes" aria-label="Режимы вопросов">
+      <button class="mode-btn active" data-mode="all">Все вопросы<br>32 карточки</button>
+      <button class="mode-btn" data-mode="brand">Город как бренд<br>медиа + дизайн</button>
+      <button class="mode-btn" data-mode="comfort">Комфортный город<br>сценарии жизни</button>
+      <button class="mode-btn" data-mode="flacon">Жизнь территорий<br>Флакон + кластеры</button>
+    </nav>
+
+    <section class="stage">
+      <section class="wheel-card" aria-label="Колесо фортуны">
+        <div class="wheel-wrap">
+          <div class="pointer" aria-hidden="true"></div>
+          <div class="wheel" id="wheel" aria-hidden="true"></div>
+          <button class="spin-button" id="spinButton" type="button">Медиа<br>вопрос</button>
+        </div>
+      </section>
+
+      <aside class="side-card" aria-label="Параметры выбора">
+        <div class="side-top">
+          <div class="mini-label">Текущий режим</div>
+          <h2 class="side-title">Медиа вопрос</h2>
+          <div class="mode-name" id="modeName">Все вопросы</div>
+        </div>
+        <div class="side-bottom">
+          <div class="stat-row">
+            <div class="stat">
+              <strong id="questionCount">32</strong>
+              <span>сектора на колесе</span>
+            </div>
+            <div class="stat">
+              <strong id="topicCount">3</strong>
+              <span>тематических блока</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="overlay" id="overlay" aria-modal="true" role="dialog" aria-label="Выпавший вопрос">
+    <div class="result-shell">
+      <article class="result-card" id="resultCard">
+        <div class="face front-face">
+          <div class="front-question">?</div>
+        </div>
+        <div class="face back-face">
+          <div class="question-meta">
+            <span class="pill pill-number" id="resultNumber">Вопрос 01</span>
+            <span class="pill pill-topic" id="resultTopic">Тема</span>
+          </div>
+          <p class="question-text" id="resultQuestion">Вопрос появится здесь.</p>
+          <div class="result-actions">
+            <button class="close-btn" id="closeOverlay" type="button">Закрыть</button>
+            <button class="close-btn primary" id="againButton" type="button">Следующий вопрос</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <script>
+    const COLORS = ["#86D2C5", "#81C4D9", "#AB68E2", "#FF1493", "#26264A"];
+
+    const TOPICS = [
+      {
+        id: "brand",
+        title: "Город как бренд — медиа + дизайн",
+        shortTitle: "Город как бренд",
+        questions: [
+          "Что должно появиться в восприятии людей, чтобы место стало не просто точкой на карте, а узнаваемым образом?",
+          "Можно ли придумать, создать искусственно идентичность города с нуля или её обязательно нужно находить внутри самого места? Где проходит граница между честной работой с локальным культурным кодом и искусственным маркетингом?",
+          "Как образ города влияет на его будущее? Может ли город проигрывать не потому, что в нём мало возможностей, а потому что о нём плохо или скучно рассказывают?",
+          "Как не превратить местную идентичность в сувенирную витрину? Что делать, чтобы диалект, кухня, герб и символы не становились просто декором, а оставались живой частью жизни?",
+          "Можно ли через дизайн и медиа вернуть городу чувство достоинства? Как визуальная среда, навигация, вывески и афиши влияют на самоощущение жителей?",
+          "Что в городе чаще всего недооценивают как источник сильного образа: рынок, двор, заводскую проходную, местную легенду, привычный маршрут?",
+          "Как медиа могут помочь городу увидеть самого себя заново? Могут ли медиа стать способом самопознания территории?",
+          "Что делает город фотогеничным и медийным сегодня?",
+          "Как работать с городами, у которых сложный или противоречивый образ: промышленный, депрессивный, закрытый, «не туристический»?"
+        ]
+      },
+      {
+        id: "comfort",
+        title: "Комфортный город — сценарии жизни",
+        shortTitle: "Комфортный город",
+        questions: [
+          "Что делает город «своим», родным для человека: маршруты, воспоминания, язык, визуальные символы, люди, запахи, привычки, возможность влиять на среду?",
+          "Почему появился тренд на возвращение зумеров на малую родину из больших городов и переезд в деревни? Как долго он продержится?",
+          "Как вы относитесь к концепции 15-минутного города в российских реалиях? Что из неё реально применимо в регионах?",
+          "Какие городские сценарии сегодня особенно важны для молодёжи? Что должно появиться в городе, чтобы молодые люди не воспринимали его как место, из которого нужно уехать?",
+          "Как городское пространство может стать точкой профессионального роста?",
+          "Где в процессе развития города находится обычный человек: зритель, участник, соавтор, критик, пользователь, носитель смысла?",
+          "Что делать, если местные жители не верят в потенциал своего города? С чего начинается изменение отношения к месту у тех, кто давно в нём живёт?",
+          "Как работать с «невидимыми» районами города, которые не считаются центром, не попадают в туристические маршруты и редко становятся темой медиа?",
+          "Может ли город быть современным, не теряя свою историческую глубину?"
+        ]
+      },
+      {
+        id: "flacon",
+        title: "Жизнь территорий — Флакон + кластеры",
+        shortTitle: "Жизнь территорий",
+        questions: [
+          "Как понять, что заброшенная промзона или старый квартал действительно могут стать точкой притяжения? Назовите топ-5 факторов оценки потенциала.",
+          "Какая ошибка чаще всего убивает креативный кластер ещё до запуска?",
+          "Как вы подбираете резидентов в пространство?",
+          "Можно ли оживить территорию только через события и медиа, если сама городская среда пока неудобна? Или физическое пространство всегда должно меняться первым?",
+          "Если бы вам дали один пустующий объект в незнакомом регионе и 30 дней на запуск первой жизни вокруг него — что бы вы сделали в первую неделю?",
+          "Как понять, что пространству нужна не реконструкция, а новая история? Бывают ли случаи, когда достаточно правильно переупаковать смысл, не меняя радикально физическую среду?",
+          "Что важнее для креативной территории: красивая архитектура или правильно собранное сообщество? Может ли сильное сообщество вытянуть слабое пространство?",
+          "Какой провал в работе с территориями оказался для вас самым полезным профессиональным уроком?",
+          "Что важнее при запуске нового городского пространства: сначала создать трафик или сначала сформировать смысл? Можно ли привлечь людей в место, если они пока не понимают, зачем туда идти?",
+          "Какие территории сложнее всего оживлять: промзоны, исторические здания, спальные районы, малые города? В чём специфика каждого типа?",
+          "Какие первые признаки говорят, что креативное пространство «заработало»?",
+          "Как измерить эффект от креативного развития территории, кроме посещаемости и выручки?",
+          "Может ли один сильный проект изменить восприятие целого города?",
+          "Что делать, если администрация, бизнес и жители по-разному видят будущее территории? Как находить общий язык?"
+        ]
+      }
+    ];
+
+    const state = {
+      mode: "all",
+      items: [],
+      pool: [],
+      rotation: 0,
+      spinning: false,
+      selected: null
+    };
+
+    const wheel = document.getElementById("wheel");
+    const spinButton = document.getElementById("spinButton");
+    const modeButtons = Array.from(document.querySelectorAll(".mode-btn"));
+    const modeName = document.getElementById("modeName");
+    const questionCount = document.getElementById("questionCount");
+    const topicCount = document.getElementById("topicCount");
+    const overlay = document.getElementById("overlay");
+    const resultNumber = document.getElementById("resultNumber");
+    const resultTopic = document.getElementById("resultTopic");
+    const resultQuestion = document.getElementById("resultQuestion");
+    const closeOverlay = document.getElementById("closeOverlay");
+    const againButton = document.getElementById("againButton");
+
+    function padNumber(num) {
+      return String(num).padStart(2, "0");
+    }
+
+    function flattenQuestions() {
+      let globalIndex = 1;
+      return TOPICS.flatMap(topic => topic.questions.map((question, index) => ({
+        topicId: topic.id,
+        topicTitle: topic.title,
+        topicShortTitle: topic.shortTitle,
+        localNumber: index + 1,
+        globalNumber: globalIndex++,
+        question
+      })));
+    }
+
+    function getItemsForMode(mode) {
+      if (mode === "all") return flattenQuestions();
+      const topic = TOPICS.find(item => item.id === mode);
+      return topic.questions.map((question, index) => ({
+        topicId: topic.id,
+        topicTitle: topic.title,
+        topicShortTitle: topic.shortTitle,
+        localNumber: index + 1,
+        globalNumber: index + 1,
+        question
+      }));
+    }
+
+    function getModeTitle(mode) {
+      if (mode === "all") return "Все вопросы";
+      return TOPICS.find(item => item.id === mode).shortTitle;
+    }
+
+    function normalizeDegrees(deg) {
+      return ((deg % 360) + 360) % 360;
+    }
+
+    function rebuildWheel() {
+      const items = state.items;
+      const count = items.length;
+      const sector = 360 / count;
+      const parts = [];
+      for (let i = 0; i < count; i++) {
+        const start = i * sector;
+        const end = (i + 1) * sector;
+        const color = COLORS[i % COLORS.length];
+        parts.push(`${color} ${start}deg ${end}deg`);
+      }
+
+      wheel.style.background = `conic-gradient(from -90deg, ${parts.join(", ")})`;
+      wheel.innerHTML = "";
+
+      const radius = count > 24 ? 40 : count > 14 ? 38 : 36;
+      for (let i = 0; i < count; i++) {
+        const label = document.createElement("div");
+        label.className = "sector-label";
+        label.textContent = "?";
+        const angle = i * sector + sector / 2;
+        label.style.transform = `rotate(${angle}deg) translateY(calc(-1 * min(${radius}vh, ${radius}vw, 285px))) rotate(${-angle}deg)`;
+        wheel.appendChild(label);
+      }
+    }
+
+    function setMode(mode) {
+      if (state.spinning) return;
+      state.mode = mode;
+      state.items = getItemsForMode(mode);
+      state.pool = state.items.map((_, index) => index);
+      state.rotation = 0;
+      wheel.style.transition = "none";
+      wheel.style.transform = "rotate(0deg)";
+      requestAnimationFrame(() => {
+        wheel.style.transition = "transform 4.6s cubic-bezier(.13,.79,.14,1)";
+      });
+
+      modeButtons.forEach(button => button.classList.toggle("active", button.dataset.mode === mode));
+      modeName.textContent = getModeTitle(mode);
+      questionCount.textContent = state.items.length;
+      topicCount.textContent = mode === "all" ? 3 : 1;
+      rebuildWheel();
+    }
+
+    function pickRandomIndex() {
+      if (!state.pool.length) {
+        state.pool = state.items.map((_, index) => index);
+      }
+      const poolIndex = Math.floor(Math.random() * state.pool.length);
+      const itemIndex = state.pool[poolIndex];
+      state.pool.splice(poolIndex, 1);
+      return itemIndex;
+    }
+
+    function showResult(item) {
+      const number = state.mode === "all" ? item.globalNumber : item.localNumber;
+      resultNumber.textContent = `Вопрос ${padNumber(number)}`;
+      resultTopic.textContent = item.topicTitle;
+      resultQuestion.textContent = item.question;
+
+      overlay.classList.remove("flipped");
+      overlay.classList.add("show");
+      setTimeout(() => overlay.classList.add("flipped"), 420);
+    }
+
+    function spin() {
+      if (state.spinning) return;
+      state.spinning = true;
+      spinButton.disabled = true;
+      modeButtons.forEach(button => button.disabled = true);
+
+      const selectedIndex = pickRandomIndex();
+      const selected = state.items[selectedIndex];
+      state.selected = selected;
+
+      const count = state.items.length;
+      const sector = 360 / count;
+      const targetCenter = selectedIndex * sector + sector / 2;
+      const current = normalizeDegrees(state.rotation);
+      const delta = normalizeDegrees(-targetCenter - current);
+      const spins = 6 + Math.floor(Math.random() * 3);
+      state.rotation += spins * 360 + delta;
+      wheel.style.transform = `rotate(${state.rotation}deg)`;
+
+      setTimeout(() => {
+        state.spinning = false;
+        spinButton.disabled = false;
+        modeButtons.forEach(button => button.disabled = false);
+        showResult(selected);
+      }, 4700);
+    }
+
+    function closeResult() {
+      overlay.classList.remove("show", "flipped");
+    }
+
+    modeButtons.forEach(button => button.addEventListener("click", () => setMode(button.dataset.mode)));
+    spinButton.addEventListener("click", spin);
+    closeOverlay.addEventListener("click", closeResult);
+    againButton.addEventListener("click", () => {
+      closeResult();
+      setTimeout(spin, 260);
+    });
+    overlay.addEventListener("click", event => {
+      if (event.target === overlay) closeResult();
+    });
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeResult();
+      if ((event.code === "Space" || event.key === "Enter") && !overlay.classList.contains("show")) {
+        event.preventDefault();
+        spin();
+      }
+    });
+
+    setMode("all");
+  </script>
+</body>
+</html>
